@@ -76,7 +76,8 @@ const GameController = (function () {
         return false;
     };
 
+    console.table(board);
+    console.log(activePlayerMarker === 1 ? "Player One's Turn" : "Player Two's Turn");
+
     return { placeMarker, checkWin }
 })();
-
-console.table(Gameboard.getBoard());
