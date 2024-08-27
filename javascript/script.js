@@ -35,13 +35,13 @@ const GameController = (function () {
         if (board[row][column] === 0) {
             board[row][column] = activePlayerMarker;
             if (checkWin()) {
-                alert(activePlayerMarker === 1 ? "Player One Won" : "Player Two Won");
-                Gameboard.resetBoard();
+                DOMController.updateDOM(true, activePlayerMarker);
             } else {
                 switchPlayer();
+                DOMController.updateDOM();
             }
-            console.table(board);
             console.log(activePlayerMarker === 1 ? "Player One's Turn" : "Player Two's Turn")
+            console.table(board);
         } else {
             console.log(`The cell is already filled (${row},${column})`)
         }
@@ -75,9 +75,83 @@ const GameController = (function () {
         }
         return false;
     };
-
-    console.table(board);
-    console.log(activePlayerMarker === 1 ? "Player One's Turn" : "Player Two's Turn");
-
-    return { placeMarker, checkWin }
+    function getActivePlayer(){
+        return activePlayerMarker;
+    }
+    return { placeMarker, checkWin, getActivePlayer }
 })();
+
+const DOMController = (function () {
+    const boardElement = document.getElementById('tic-tac-toe');
+    const board = Gameboard.getBoard();
+
+    function CreateGameDOM() {
+        board.forEach((row, rowIndex) => {
+            const rowElement = document.createElement('div');
+            rowElement.classList.add("row");
+            rowElement.classList.add(`row${rowIndex + 1}`)
+
+            row.forEach((column, columnIndex) => {
+                const columnElement = document.createElement('button');
+                columnElement.classList.add("column");
+                columnElement.classList.add(`column${columnIndex+1}`);
+                columnElement.dataset.row = rowIndex;
+                columnElement.dataset.column = columnIndex;
+                columnElement.addEventListener('click', () =>{
+                    GameController.placeMarker(rowIndex, columnIndex);
+                });
+                rowElement.appendChild(columnElement);
+            });
+            boardElement.appendChild(rowElement);
+        });
+        
+        updateDOM();
+    }
+
+    function updateDOM(gameOver = false, activePlayerMarker = 0){
+        const board = Gameboard.getBoard()
+        const cells = Array.from(boardElement.getElementsByClassName('column'));
+        let activePlayer = GameController.getActivePlayer();
+        const ticTacToe = document.getElementById('tic-tac-toe');
+        ticTacToe.style.setProperty('--cell-size', `${cells[0].clientWidth}px`);
+        ticTacToe.classList.remove('x');
+        ticTacToe.classList.remove('o');
+        activePlayer == 1 ? ticTacToe.classList.add('x') : ticTacToe.classList.add('o');
+
+        if (window.innerHeight < window.innerWidth) {
+            ticTacToe.style.setProperty('--size', "70vh");
+        } else {
+            ticTacToe.style.setProperty('--size', "70vw");
+        }
+
+        cells.forEach(cell =>{
+            const row = cell.dataset.row;
+            const column = cell.dataset.column;
+
+            if(board[row][column] == 1){
+                cell.classList.add('x');
+            }else if(board[row][column] == 2){
+                cell.classList.add('o');
+            }
+        });
+        gameOver == true ? setTimeout(() => {RestartGame(activePlayerMarker)}, 1) : null;
+    }
+    function RestartGame(activePlayer){
+        // Alert Who Won For Now
+        alert(`${activePlayer == 1 ? "Player 1 Won!" : "Player 2 Won!"}`)
+    }
+    CreateGameDOM();
+    return { CreateGameDOM, updateDOM}
+})();
+
+// Responsive Grid
+window.onresize = function () {
+    const ticTacToe = document.getElementById('tic-tac-toe');
+    const cells = Array.from(document.getElementsByClassName('column'));
+    if (window.innerHeight < window.innerWidth) {
+        ticTacToe.style.setProperty('--size', "70vh");
+    } else {
+        ticTacToe.style.setProperty('--size', "70vw");
+    }
+    ticTacToe.style.setProperty('--cell-size', `${cells[0].clientWidth}px`)
+};

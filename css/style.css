@@ -1,0 +1,156 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#tic-tac-toe {
+    /* border: 2px solid black; */
+    --size: 70vh;
+    --border-color: blueviolet;
+    --border-size: 2px;
+    height: var(--size);
+    width: var(--size);
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+    flex: 1;
+}
+
+.column {
+    border: var(--border-size) solid var(--border-color);
+    background: none;
+    transition: .3s ease;
+    font-size: 5rem;
+    flex: 1;
+    cursor: pointer;
+}
+
+.row1 .column {
+    border-top: none;
+}
+
+.row1 .column3,
+.row2 .column3,
+.row3 .column3 {
+    border-right: none;
+}
+
+.row3 .column {
+    border-bottom: none;
+}
+
+.row1 .column1,
+.row2 .column1,
+.row3 .column1 {
+    border-left: none;
+}
+
+/* Markers */
+#tic-tac-toe .row .column {
+    position: relative;
+}
+
+
+.column.x::before,
+.column.x::after {
+    content: " ";
+    position: absolute;
+    background-color: black;
+    width: calc(var(--cell-size) * .2);
+    height: var(--cell-size);
+    top: 0;
+    right: 40%;
+}
+
+.column.x::before {
+    transform: rotate(45deg);
+}
+
+.column.x::after {
+    transform: rotate(-45deg);
+}
+
+.column.o::before,
+.column.o::after {
+    content: " ";
+    position: absolute;
+    border-radius:100%;
+}
+
+.column.o::before {
+    background-color: black;
+    width: calc(var(--cell-size) * .9);
+    height: calc(var(--cell-size) * .9);
+    top: 5%;
+    right: 5%;
+}
+
+.column.o::after {
+    width: calc(var(--cell-size) * .6);
+    height: calc(var(--cell-size) * .6);
+    background-color: white;
+    top: 20%;
+    right: 20%;
+}
+
+.column.x,
+.column.o {
+    cursor: not-allowed;
+}
+
+/* Marker Preview */
+#tic-tac-toe.x .column:not(.x):not(.o):hover::before,
+#tic-tac-toe.x .column:not(.x):not(.o):hover::after {
+    content: " ";
+    position: absolute;
+    background-color: rgb(157, 157, 157);
+    width: calc(var(--cell-size) * .2);
+    height: var(--cell-size);
+    top: 0;
+    right: 40%;
+}
+
+#tic-tac-toe.x .column:hover::before {
+    transform: rotate(45deg);
+}
+
+#tic-tac-toe.x .column:hover::after {
+    transform: rotate(-45deg);
+}
+
+#tic-tac-toe.o .column:not(.x):not(.o):hover::before,
+#tic-tac-toe.o .column:not(.x):not(.o):hover::after {
+    content: " ";
+    position: absolute;
+    border-radius: 100%;
+}
+
+#tic-tac-toe.o .column:not(.x):not(.o):hover::before {
+    background-color: rgb(157, 157, 157);
+    width: calc(var(--cell-size) * .9);
+    height: calc(var(--cell-size) * .9);
+    top: 5%;
+    right: 5%;
+}
+
+#tic-tac-toe.o .column:not(.x):not(.o):hover::after {
+    width: calc(var(--cell-size) * .6);
+    height: calc(var(--cell-size) * .6);
+    background-color: white;
+    top: 20%;
+    right: 20%;
+}
